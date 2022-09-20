@@ -1,4 +1,5 @@
 import allure
+import pytest
 from selenium import webdriver
 from HeaderPage import HeaderPage
 from MainPage import MainPage
@@ -8,12 +9,13 @@ from YandexPage import YandexPage
 
 class TestAccordion:
 
-    driver = None
+    @pytest.fixture(scope='function', autouse=True)
+    def setup_and_teardown(self):
+        self.driver = webdriver.Firefox()
+        self.driver.implicitly_wait(5)
 
-    @classmethod
-    def setup_class(cls):
-        cls.driver = webdriver.Firefox()
-        cls.driver.implicitly_wait(5)
+        yield self.driver
+        self.driver.quit()
 
     @allure.title('Проверка текста под 1-ым вопросом')
     def test_check_text_under_1_header(self):
@@ -32,6 +34,10 @@ class TestAccordion:
 
         main_page = MainPage(self.driver)
 
+        main_page.open_page('https://qa-scooter.praktikum-services.ru/')
+
+        main_page.accept_cookie()
+
         text_of_2_accordion = main_page.get_text_by_accordion_header_2()
         assert text_of_2_accordion == 'Пока что у нас так: один заказ — один самокат. Если хотите покататься с ' \
                                       'друзьями, можете просто сделать несколько заказов — один за другим.'
@@ -40,6 +46,10 @@ class TestAccordion:
     def test_check_text_under_3_header(self):
 
         main_page = MainPage(self.driver)
+
+        main_page.open_page('https://qa-scooter.praktikum-services.ru/')
+
+        main_page.accept_cookie()
 
         text_of_3_accordion = main_page.get_text_by_accordion_header_3()
         assert text_of_3_accordion == 'Допустим, вы оформляете заказ на 8 мая. Мы привозим самокат 8 мая в течение ' \
@@ -52,6 +62,10 @@ class TestAccordion:
 
         main_page = MainPage(self.driver)
 
+        main_page.open_page('https://qa-scooter.praktikum-services.ru/')
+
+        main_page.accept_cookie()
+
         text_of_4_accordion = main_page.get_text_by_accordion_header_4()
         assert text_of_4_accordion == 'Только начиная с завтрашнего дня. Но скоро станем расторопнее.'
 
@@ -59,6 +73,10 @@ class TestAccordion:
     def test_check_text_under_5_header(self):
 
         main_page = MainPage(self.driver)
+
+        main_page.open_page('https://qa-scooter.praktikum-services.ru/')
+
+        main_page.accept_cookie()
 
         text_of_5_accordion = main_page.get_text_by_accordion_header_5()
         assert text_of_5_accordion == 'Пока что нет! Но если что-то срочное — всегда можно позвонить в поддержку по ' \
@@ -69,6 +87,10 @@ class TestAccordion:
 
         main_page = MainPage(self.driver)
 
+        main_page.open_page('https://qa-scooter.praktikum-services.ru/')
+
+        main_page.accept_cookie()
+
         text_of_6_accordion = main_page.get_text_by_accordion_header_6()
         assert text_of_6_accordion == 'Самокат приезжает к вам с полной зарядкой. Этого хватает на восемь суток — ' \
                                       'даже если будете кататься без передышек и во сне. Зарядка не понадобится.'
@@ -77,6 +99,10 @@ class TestAccordion:
     def test_check_text_under_7_header(self):
 
         main_page = MainPage(self.driver)
+
+        main_page.open_page('https://qa-scooter.praktikum-services.ru/')
+
+        main_page.accept_cookie()
 
         text_of_7_accordion = main_page.get_text_by_accordion_header_7()
         assert text_of_7_accordion == 'Да, пока самокат не привезли. Штрафа не будет, объяснительной записки тоже не ' \
@@ -87,22 +113,23 @@ class TestAccordion:
 
         main_page = MainPage(self.driver)
 
+        main_page.open_page('https://qa-scooter.praktikum-services.ru/')
+
+        main_page.accept_cookie()
+
         text_of_8_accordion = main_page.get_text_by_accordion_header_8()
         assert text_of_8_accordion == 'Да, обязательно. Всем самокатов! И Москве, и Московской области.'
-
-    @classmethod
-    def teardown_class(cls):
-        cls.driver.quit()
 
 
 class TestOrder:
 
-    driver = None
+    @pytest.fixture(scope='function', autouse=True)
+    def setup_and_teardown(self):
+        self.driver = webdriver.Firefox()
+        self.driver.implicitly_wait(5)
 
-    @classmethod
-    def setup_class(cls):
-        cls.driver = webdriver.Firefox()
-        cls.driver.implicitly_wait(5)
+        yield self.driver
+        self.driver.quit()
 
     @allure.title('Проверка заказа с заполнением всех полей валидными значениями')
     def test_order(self):
@@ -144,6 +171,12 @@ class TestOrder:
     @allure.title('Проверка заказа с заполнением только обязательных полей валидными значениями')
     def test_order_required_fields_only(self):
 
+        main_page = MainPage(self.driver)
+
+        main_page.open_page('https://qa-scooter.praktikum-services.ru/')
+
+        main_page.accept_cookie()
+
         header_page = HeaderPage(self.driver)
 
         header_page.click_header_order_button()
@@ -178,6 +211,10 @@ class TestOrder:
     @allure.title('Проверка перехода на главную страницу Самоката по клику на лого Самокат')
     def test_header_scooter(self):
 
+        main_page = MainPage(self.driver)
+
+        main_page.open_page('https://qa-scooter.praktikum-services.ru/')
+
         header_page = HeaderPage(self.driver)
 
         header_page.click_scooter_logo()
@@ -186,6 +223,10 @@ class TestOrder:
 
     @allure.title('Проверка перехода на главную страницу Яндекса по клику на лого Яндекс')
     def test_header_yandex(self):
+
+        main_page = MainPage(self.driver)
+
+        main_page.open_page('https://qa-scooter.praktikum-services.ru/')
 
         header_page = HeaderPage(self.driver)
 
@@ -198,7 +239,3 @@ class TestOrder:
         yandex_page.wait_for_search_button()
 
         assert yandex_page.driver.current_url == "https://dzen.ru/?yredirect=true"
-
-    @classmethod
-    def teardown_class(cls):
-        cls.driver.quit()
